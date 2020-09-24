@@ -1,14 +1,25 @@
 //
-//  AudioContentList.swift
-//  nerugaku1
+//  List2.swift
+//  nerugaku
 //
-//  Created by Shunsuke Takagi on 9/11/20.
+//  Created by Shunsuke Takagi on 9/25/20.
 //  Copyright © 2020 Shunsuke Takagi. All rights reserved.
 //
 
 import SwiftUI
 
-struct AudioContentList: View {
+//
+//  List1.swift
+//  nerugaku
+//
+//  Created by Shunsuke Takagi on 9/25/20.
+//  Copyright © 2020 Shunsuke Takagi. All rights reserved.
+//
+
+import SwiftUI
+
+
+struct List2: View {
     @EnvironmentObject private var userData: UserData
     var body: some View {
         List {
@@ -26,11 +37,11 @@ struct AudioContentList: View {
     }
 }
 
-struct AudioContentList_Previews: PreviewProvider {
+struct List2_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(["iPhone SE", "iPhone XS Max"], id: \.self) { deviceName in
             NavigationView {
-                AudioContentList()
+                List2()
                     .previewDevice(PreviewDevice(rawValue: deviceName))
                     .previewDisplayName(deviceName)
             }
@@ -38,4 +49,5 @@ struct AudioContentList_Previews: PreviewProvider {
         .environmentObject(UserData())
     }
 }
+
 
