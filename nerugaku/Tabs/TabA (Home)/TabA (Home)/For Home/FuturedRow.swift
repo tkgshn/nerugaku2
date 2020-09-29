@@ -1,44 +1,32 @@
 //
-//  Recomend.
-//CategoryRow
-//swift
-//  nerugaku1
+//  FuturedRow.swift
+//  nerugaku
 //
-//  Created by Shunsuke Takagi on 2020/07/23.
+//  Created by Shunsuke Takagi on 9/25/20.
 //  Copyright © 2020 Shunsuke Takagi. All rights reserved.
 //
 
 import SwiftUI
 
-struct CategoryRow: View {
+struct FuturedRow: View {
+    
     var categoryName: String
     var items: [AudioContent]
     @EnvironmentObject var userData: UserData
     
     var body: some View {
-        //        縦方向
         VStack(alignment: .leading) {
-//            テキスト
+            //            テキスト
             HStack {
                 if #available(iOS 14.0, *) {
                     Text(self.categoryName)
                         .font(.title3)
                         .fontWeight(.bold)
-                        .padding(.leading, 15)
+                        .padding(.leading, -2)
                         .padding(.top, 5)
+                        .padding(.bottom, -2)
                 } else {
                     // Fallback on earlier versions
-                }
-                Spacer()
-                NavigationLink(
-                    destination: CategoryList(categoryName: categoryName, items: self.items
-                    )
-                ) {
-                    Text("すべて見る")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .padding(.trailing, 15)
-                        .padding(.top, 5)
                 }
             }
             //            横向きにスクロールを追加
@@ -54,19 +42,29 @@ struct CategoryRow: View {
                             )
                         ) {
                             //                            下で定義したものを使用
-                            CategoryItem(audioContent: audioContent)
+                            FuturedItem(audioContent: audioContent)
                         }
                     }
                 }
             }
             .frame(height: 185)
-        }
+        }.padding(.bottom)
+    }
+}
+
+struct FuturedRow_Previews: PreviewProvider {
+    static var previews: some View {
+        FuturedRow(categoryName: audioContentData[0].category.rawValue,
+                   items: Array(audioContentData.prefix(4)))
+            .environmentObject(UserData())
     }
 }
 
 
+
+
 //ここでアイテム自体を定義する
-struct CategoryItem: View {
+struct FuturedItem: View {
     var audioContent: AudioContent
     var body: some View {
         //        縦方向
@@ -75,28 +73,39 @@ struct CategoryItem: View {
             audioContent.image
                 .renderingMode(.original)
                 .resizable()
-                .frame(width: 155, height: 155)
+                .frame(width: 200, height: 150)
                 .cornerRadius(5)
             //            タイトルを追加
             Text(audioContent.name)
                 .foregroundColor(.primary)
                 .font(.subheadline)
         }
-        .padding(.leading, 15)
+        .padding(.trailing, 15)
     }
 }
 
 
 
 
-struct CategoryRow_Previews: PreviewProvider {
+struct ListView: View {
+    var body: some View {
+        NavigationView {
+            List {
+                
+                ForEach(1..<10) { _ in
+                    FuturedRow(categoryName: audioContentData[0].category.rawValue,
+                               items: Array(audioContentData.prefix(4)))
+                        .environmentObject(UserData())
+                }
+            }
+        }
+    }
+}
+
+struct ListView_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryRow(categoryName: audioContentData[0].category.rawValue,
-                 items: Array(audioContentData.prefix(4))
-        )
-        .environmentObject(UserData())
-        .previewLayout(.sizeThatFits)
-        
+        ListView()
+            .environmentObject(UserData())
+            .previewLayout(.sizeThatFits)
     }
 }
-
