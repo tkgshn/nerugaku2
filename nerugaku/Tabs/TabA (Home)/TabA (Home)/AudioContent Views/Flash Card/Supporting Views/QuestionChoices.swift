@@ -8,17 +8,44 @@
 
 import SwiftUI
 
+// MARK: - 回答の選択肢を生成
+
 // MARK: - BoxView
 //選択肢は同じid内のphrasesをランダムに取得したものにする
 struct BoxView: View {
     @Binding var selectedBox: BoxType
     let color: Color
     let boxType: BoxType
-    //    フレーズを選択肢として辞書に入れる
-    let choiceDic = ["example text A", "example text B", "example text c", "TestD"]
+    
+    //    現在表示している問題を共通化する
+    @Binding var currentQuestionIndex: Int
+    
+    //  辞書を作成
+    let Dic = [
+        ["japanese": "私", "english": "I", "phraseAudioName"  : "人称"],
+        ["japanese": "私とあなた", "english": "I and You", "phraseAudioName"  : "国と言語"],
+        ["japanese": "私たち", "english": "both of us", "phraseAudioName"  : "人称"],
+        ["japanese": "彼", "english": "he", "phraseAudioName"  : "国と言語"],
+        ["japanese": "彼と彼女", "english": "he and she", "phraseAudioName"  : "人称"],
+        ["japanese": "彼ら", "english": "they both", "phraseAudioName"  : "国と言語"],
+    ]
+    
+    
+    //    // 数字でDicの番号を指定して、その中のenglishを吐き出す関数
+    //    func getQuestion(_ index: Int) -> String {
+    //        let question = Dic[index]["english"]!
+    //        return question
+    //    }
+    
+    // 数字でDicのリスト番号を指定して、その中のjapaneseを吐き出す関数
+    func getJapaneseQuestion(_ index: Int) -> String {
+        let japaneseWord = Dic[index]["japanese"]!
+        return japaneseWord
+    }
+    
     var body: some View {
-        //        要素の中からランダムに取得
-        Text(choiceDic.randomElement()!)
+        
+        Text(getJapaneseQuestion(currentQuestionIndex-1)) // これで絶対答えのが表示されてるようになる？
             .font(.headline)
             .padding()
             .background(color)
@@ -29,8 +56,12 @@ struct BoxView: View {
             .padding()
             .border(Color.black, width: selectedBox == boxType ? 4 : 0)
     }
-    
 }
+
+
+
+
+
 
 
 enum BoxType: String {
@@ -56,12 +87,25 @@ final class SingleSelectableBoxViewModel: ObservableObject {
 // MARK: - SingleSelectableBoxView
 struct SingleSelectableBoxView: View {
     @Binding var selectedBox: BoxType
+    @Binding var currentQuestionIndex: Int
+    
     var body: some View {
         VStack {
-            BoxView(selectedBox: $selectedBox, color: .red, boxType: .red)
-            BoxView(selectedBox: $selectedBox, color: .green, boxType: .green)
-            BoxView(selectedBox: $selectedBox, color: .blue, boxType: .blue)
+            
+            BoxView(selectedBox: $selectedBox, color: .red, boxType: .red, currentQuestionIndex: $currentQuestionIndex)
+            BoxView(selectedBox: $selectedBox, color: .green, boxType: .green, currentQuestionIndex: $currentQuestionIndex)
+            BoxView(selectedBox: $selectedBox, color: .blue, boxType: .blue, currentQuestionIndex: $currentQuestionIndex)
             
         }
+    }
+}
+
+
+
+// MARK: - Preview
+struct QuestionRootView_Previews2: PreviewProvider {
+    static var previews: some View {
+        QuestionRootView(audioContent: audioContentData[0])
+        
     }
 }
